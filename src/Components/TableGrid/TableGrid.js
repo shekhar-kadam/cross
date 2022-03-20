@@ -4,6 +4,7 @@ import {
   getAllUsers,
   getFilteredUsers,
 } from "../../Redux/Action/GetUserAction";
+import UserTable from "../../View/UserTable/UserTable";
 
 function TableGrid() {
   const [startCount, setStartCount] = useState(1);
@@ -23,7 +24,7 @@ function TableGrid() {
 
   useEffect(() => {
     dispatch(getAllUsers(startCount, 20));
-  }, [dispatch]);
+  }, [dispatch, startCount]);
 
   useEffect(() => {
     if (startCount >= 1) {
@@ -33,7 +34,7 @@ function TableGrid() {
 
   useEffect(() => {
     dispatch(getFilteredUsers(10, newId));
-  }, [newId]);
+  }, [newId, dispatch]);
 
   const previousValue = () => {
     if (startCount <= 1) return;
@@ -70,10 +71,42 @@ function TableGrid() {
     setNewId(event.target.value);
   };
 
+  useEffect(() => {
+    // Function to add our give data into cache
+    const addDataIntoCache = (cacheName, url, response) => {
+      // Converting our response into Actual Response form
+      const data = new Response(JSON.stringify(response));
+
+      if ("caches" in window) {
+        // Opening given cache and putting our data into it
+        caches.open(cacheName).then((cache) => {
+          cache.put(url, data);
+          // alert("Data Added into cache!");
+        });
+      }
+    };
+
+    addDataIntoCache("MyCache", "https://localhost:3000", newUserData);
+  }, [newUserData]);
+
+  useEffect(() => {
+    getAllCacheData();
+  }, []);
+
+  const getAllCacheData = async () => {
+    var url = "https://localhost:3000";
+
+    // List of all caches present in browser
+    var names = await caches.open("MyCache");
+    const cachedResponse = await names.match(url);
+    const finalData = await cachedResponse.json();
+    setNewUserData(finalData);
+  };
+
   return (
     <div className="flex flex-col">
       <div className="text-center font-bold text-2xl">Posts Table</div>
-      <div className="flex m-auto ">
+      <div className="flex xl:flex-row  md:flex-row sm:flex-col m-auto ">
         <div
           className="px-6 h-10 py-2 ml-10 font-bold cursor-pointer border-2 border-black"
           onClick={ascendingData}
@@ -96,22 +129,7 @@ function TableGrid() {
           </select>
         </div>
       </div>
-      <div className="px-4 py-5">
-        <div className="grid grid-cols-3 border-[1px] p-2">
-          <div>#</div>
-          <div>Title</div>
-          <div>Body</div>
-        </div>
-        <div className="grid grid-cols-3 p-2 ">
-          {newUserData?.map((elem) => (
-            <>
-              <div className="py-2">{elem?.id}</div>
-              <div className="py-2">{elem?.title}</div>
-              <div className="py-2">{elem?.body}</div>
-            </>
-          ))}
-        </div>
-      </div>
+      <UserTable newUserData={newUserData} />
       <div className="flex  m-auto pb-10 ">
         <div
           className="px-6 h-10 py-2 ml-10 font-bold cursor-pointer border-2 border-black"
