@@ -32,9 +32,9 @@ function TableGrid() {
     }
   }, [dispatch, startCount]);
 
-  useEffect(() => {
-    dispatch(getFilteredUsers(10, newId));
-  }, [newId, dispatch]);
+  // useEffect(() => {
+  //   dispatch(getFilteredUsers(10, newId));
+  // }, [newId, dispatch]);
 
   const previousValue = () => {
     if (startCount <= 1) return;
@@ -49,17 +49,6 @@ function TableGrid() {
     });
   };
 
-  const ascendingData = () => {
-    const ascData = [...newUserData];
-    ascData?.sort((a, b) => a.id - b.id);
-    setNewUserData(ascData);
-  };
-  const descendingData = () => {
-    const desData = [...newUserData];
-    desData?.sort((a, b) => a.id - b.id).reverse();
-    setNewUserData(desData);
-  };
-
   useEffect(() => {
     if (newId) setNewUserData(userFilterData);
   }, [userFilterData]);
@@ -68,63 +57,32 @@ function TableGrid() {
   }, [userData]);
 
   const handleChange = (event) => {
-    setNewId(event.target.value);
-  };
-
-  useEffect(() => {
-    // Function to add our give data into cache
-    const addDataIntoCache = (cacheName, url, response) => {
-      // Converting our response into Actual Response form
-      const data = new Response(JSON.stringify(response));
-
-      if ("caches" in window) {
-        // Opening given cache and putting our data into it
-        caches.open(cacheName).then((cache) => {
-          cache.put(url, data);
-          // alert("Data Added into cache!");
+    if (event.target.value) {
+      // setNewId(event.target.value);
+      let value = event.target.value;
+      if (userData) {
+        let filterArray = userData.filter((elem) => {
+          if (elem?.id == value) {
+            return elem;
+          }
         });
+        setNewUserData(filterArray);
       }
-    };
-
-    addDataIntoCache("MyCache", "https://localhost:3000", newUserData);
-  }, [newUserData]);
-
-  useEffect(() => {
-    getAllCacheData();
-  }, []);
-
-  const getAllCacheData = async () => {
-    var url = "https://localhost:3000";
-
-    // List of all caches present in browser
-    var names = await caches.open("MyCache");
-    const cachedResponse = await names.match(url);
-    const finalData = await cachedResponse.json();
-    setNewUserData(finalData);
+    } else {
+      setNewId(1);
+    }
   };
 
   return (
     <div className="flex flex-col">
       <div className="text-center font-bold text-2xl">Posts Table</div>
       <div className="flex xl:flex-row  md:flex-row sm:flex-col m-auto ">
-        <div
-          className="px-6 h-10 py-2 ml-10 font-bold cursor-pointer border-2 border-black"
-          onClick={ascendingData}
-        >
-          ASC
-        </div>
-        <div
-          className="px-6 h-10 py-2 ml-10 font-bold cursor-pointer border-2 border-black"
-          onClick={descendingData}
-        >
-          Desc
-        </div>
         <div className="pt-4 ml-5">
           <label>Filter</label>
           <select className="border-[1px] ml-2" onChange={handleChange}>
-            <option>Select a user</option>
+            <option value={1}>Select a user</option>
             {userData?.map((elem) => (
-              <option value={elem?.userId}>{elem?.title}</option>
+              <option value={elem?.id}>{elem?.title}</option>
             ))}
           </select>
         </div>
@@ -137,6 +95,7 @@ function TableGrid() {
         >
           Prev
         </div>
+        <div className="m-auto pl-10 font-bold text-center">{startCount}</div>
         <div
           className="px-6 h-10 py-2 ml-10 font-bold cursor-pointer border-2 border-black"
           onClick={nextValue}

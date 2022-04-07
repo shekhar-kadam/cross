@@ -1,23 +1,18 @@
 import React from "react";
-import TableGrid from "../../Components/TableGrid";
+// import TableGrid from "../../Components/TableGrid";
 
 function UserTable({ newUserData }) {
   return (
-    <div className="px-4 py-5">
-      <div className="grid grid-cols-3 border-[1px] p-2">
-        <div>#</div>
-        <div>Title</div>
-        <div>Body</div>
-      </div>
-      <div className="grid grid-cols-3 p-2 ">
-        {newUserData?.map((elem) => (
-          <>
-            <div className="py-2">{elem?.id}</div>
-            <div className="py-2">{elem?.title}</div>
-            <div className="py-2">{elem?.body}</div>
-          </>
-        ))}
-      </div>
+    <div className="grid lg:grid-cols-2 md:grid-cols-1 px-4 mx-4">
+      {newUserData?.map((elem) => (
+        <div className="cardDiv border-2 rounded-lg m-3 p-2" key={elem?.id}>
+          <div className="text-center font-bold py-2 bg-red-400 text-white">
+            {" "}
+            {elem?.title}
+          </div>
+          <div className="text-justify px-2"> {elem?.body}</div>
+        </div>
+      ))}
     </div>
   );
 }
