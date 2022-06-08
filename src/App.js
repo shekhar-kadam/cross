@@ -1,8 +1,8 @@
 import "./App.css";
-import TableGrid from "./Components/TableGrid";
+import AppRoutes from "./routes/routes";
 
 function App() {
-  return <TableGrid />;
+  return <AppRoutes />;
 }
 
 export default App;
