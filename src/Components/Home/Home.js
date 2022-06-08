@@ -9,7 +9,13 @@ function Home() {
   const [currentDeleteIndex, setCurrentDeleteIndex] = useState(0);
 
   useEffect(() => {
-    setData(JSON.parse(localStorage.getItem("contactData")));
+    let storedData = JSON.parse(localStorage.getItem("contactData"));
+    console.log(
+      "storedData",
+      storedData.sort((a, b) => a.fName.localeCompare(b.fName))
+    );
+    // setData(JSON.parse(localStorage.getItem("contactData")));
+    setData(storedData);
   }, []);
 
   const deleteData = () => {
@@ -37,10 +43,7 @@ function Home() {
           </div>
         </>
       ) : (
-        <table
-          style={{ width: 800 }}
-          className="p-3 m-auto mt-10 border-2 border-black"
-        >
+        <table className="p-3 m-auto mt-10 overflow-y-scroll border-2 border-black lg:w-10/12 md:w-52">
           <thead className="border-2 border-black">
             <th> Name</th>
             <th>Phone</th>
@@ -62,22 +65,24 @@ function Home() {
                     {elem.isWhatsapp ? "Yes" : "No"}
                   </td>
 
-                  <button
-                    className="p-3 m-5 border-2 border-black rounded-lg"
-                    onClick={() => {
-                      setModalVisible(true);
-                      setCurrentDeleteIndex(i);
-                    }}
-                  >
-                    Delete
-                  </button>
+                  <div className="flex w-40 lg:m-auto md:m-auto lg:mt-0 md:mt-4">
+                    <button
+                      className="border-2 border-black rounded-lg lg:p-3 lg:m-5 md:p-1 md:m-3"
+                      onClick={() => {
+                        setModalVisible(true);
+                        setCurrentDeleteIndex(i);
+                      }}
+                    >
+                      Delete
+                    </button>
 
-                  <Link
-                    className="p-3 m-5 border-2 border-black rounded-lg"
-                    to={`/addContact/${i}`}
-                  >
-                    Update
-                  </Link>
+                    <Link
+                      className="border-2 border-black rounded-lg lg:p-3 lg:m-5 md:p-1 md:m-3"
+                      to={`/addContact/${i}`}
+                    >
+                      Update
+                    </Link>
+                  </div>
                 </tr>
               </>
             ))}

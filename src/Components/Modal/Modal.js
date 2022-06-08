@@ -5,10 +5,10 @@ export default function Modal({ modalVal, onCancle, onConfirm }) {
     <>
       {modalVal ? (
         <>
-          <div className="fixed inset-0 top-0 flex items-center justify-center overflow-x-hidden overflow-y-auto outline-none z-100 focus:outline-none ">
+          <div className="fixed inset-0 top-0 flex items-center justify-center overflow-x-hidden overflow-y-auto outline-none bg-red z-100 ">
             <div className="relative max-w-3xl mx-auto my-6 w-100 ">
               {/*content*/}
-              <div className="relative flex flex-col w-full border-2 border-black rounded-lg shadow-lg outline-none focus:outline-none">
+              <div className="relative flex justify-center w-full bg-black border-2 border-black rounded-lg shadow-lg outline-none focus:outline-none">
                 {/*header*/}
 
                 <button
@@ -16,6 +16,7 @@ export default function Modal({ modalVal, onCancle, onConfirm }) {
                     onConfirm();
                     onCancle();
                   }}
+                  className="p-5 text-white"
                 >
                   Yes
                 </button>
@@ -23,6 +24,7 @@ export default function Modal({ modalVal, onCancle, onConfirm }) {
                   onClick={() => {
                     onCancle();
                   }}
+                  className="p-5 text-white"
                 >
                   No
                 </button>

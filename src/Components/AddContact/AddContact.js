@@ -9,12 +9,12 @@ function AddContact() {
   let navigate = useNavigate();
 
   let localData = JSON.parse(localStorage.getItem("contactData"));
-  const [checkedBox, setCheckedBox] = useState(false);
   const [formData, setFormData] = useState({
     fName: "",
     phone: "",
     type: "",
     isWhatsapp: false,
+    profile: "",
   });
 
   const [data, setData] = useState();
@@ -90,19 +90,8 @@ function AddContact() {
       }
     });
 
-    console.log("tempData", tempData.isWhatsapp);
-    if (tempData.isWhatsapp) {
-      setCheckedBox(true);
-    } else {
-      setCheckedBox(false);
-    }
-
     setFormData(tempData);
   };
-
-  useEffect(() => {
-    console.log("checked", checkedBox);
-  }, [checkedBox]);
 
   useEffect(() => {
     if (data && id) {
@@ -115,7 +104,6 @@ function AddContact() {
       <h1 className="pt-5 text-xl font-bold text-center">
         {id ? "Edit" : "Add"} Contact {id ? "of" : "To"} Your List
       </h1>
-      {formData.isWhatsapp} {checkedBox}
       <form onSubmit={handleSubmit} className="flex flex-col">
         <input
           type="text"
@@ -144,16 +132,18 @@ function AddContact() {
           <option value="office">Office</option>
         </select>
         <div className="flex">
-          <input
-            type="checkbox"
-            name="isWhatsapp"
-            onChange={handleChange}
-            value={formData.isWhatsapp}
-            className="p-5 m-4 ml-96 "
-            checked={formData.isWhatsapp}
-          />
-          <label className="pt-2 font-bold">Select your Whatsapp status</label>
+          <label className="pt-2 font-bold border-none selectClass">
+            <input
+              type="checkbox"
+              name="isWhatsapp"
+              onChange={handleChange}
+              value={formData.isWhatsapp}
+              checked={formData.isWhatsapp}
+            />
+            Select your Whatsapp status
+          </label>
         </div>
+
         <button
           className="w-32 m-auto border-2 border-black rounded-lg"
           type="submit"
