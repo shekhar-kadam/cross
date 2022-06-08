@@ -1,22 +1,29 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Layout from "../Layout/Layout";
+import Modal from "../Modal";
 
 function Home() {
   const [data, setData] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [currentDeleteIndex, setCurrentDeleteIndex] = useState(0);
 
   useEffect(() => {
     setData(JSON.parse(localStorage.getItem("contactData")));
   }, []);
 
-  const deleteData = (i) => {
-    data.splice(i, 1);
+  const deleteData = () => {
+    data.splice(currentDeleteIndex, 1);
     setData([...data]);
   };
 
   useEffect(() => {
     localStorage.setItem("contactData", JSON.stringify(data));
   }, [data]);
+
+  const handleCancle = () => {
+    setModalVisible(false);
+  };
 
   return (
     <Layout>
@@ -57,7 +64,10 @@ function Home() {
 
                   <button
                     className="p-3 m-5 border-2 border-black rounded-lg"
-                    onClick={() => deleteData(i)}
+                    onClick={() => {
+                      setModalVisible(true);
+                      setCurrentDeleteIndex(i);
+                    }}
                   >
                     Delete
                   </button>
@@ -74,6 +84,11 @@ function Home() {
           </tbody>
         </table>
       )}
+      <Modal
+        modalVal={modalVisible}
+        onCancle={handleCancle}
+        onConfirm={deleteData}
+      />
     </Layout>
   );
 }

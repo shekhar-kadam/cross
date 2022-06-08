@@ -9,6 +9,7 @@ function AddContact() {
   let navigate = useNavigate();
 
   let localData = JSON.parse(localStorage.getItem("contactData"));
+  const [checkedBox, setCheckedBox] = useState(false);
   const [formData, setFormData] = useState({
     fName: "",
     phone: "",
@@ -19,23 +20,30 @@ function AddContact() {
   const [data, setData] = useState();
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("formData", formData);
-    if (id) {
-      let submitData = localData;
-      submitData[id] = formData;
-      localStorage.setItem("contactData", JSON.stringify(submitData));
+    if (
+      formData.fName === "" &&
+      formData.phone === "" &&
+      formData.type === ""
+    ) {
+      alert("please Fill the details First");
     } else {
-      setData([...data, formData]);
-    }
+      if (id) {
+        let submitData = localData;
+        submitData[id] = formData;
+        localStorage.setItem("contactData", JSON.stringify(submitData));
+      } else {
+        setData([...data, formData]);
+      }
 
-    setFormData({
-      fName: "",
-      phone: "",
-      type: "",
-      isWhatsapp: false,
-    });
-    if (id) {
-      navigate("/");
+      setFormData({
+        fName: "",
+        phone: "",
+        type: "",
+        isWhatsapp: false,
+      });
+      if (id) {
+        navigate("/");
+      }
     }
   };
 
@@ -48,6 +56,7 @@ function AddContact() {
     let value;
     if (event.target.type == "checkbox") {
       value = event.target.checked;
+      console.log("hhhhhh", value);
     } else {
       value = event.target.value;
     }
@@ -80,20 +89,33 @@ function AddContact() {
         tempData = elem;
       }
     });
+
+    console.log("tempData", tempData.isWhatsapp);
+    if (tempData.isWhatsapp) {
+      setCheckedBox(true);
+    } else {
+      setCheckedBox(false);
+    }
+
     setFormData(tempData);
   };
+
+  useEffect(() => {
+    console.log("checked", checkedBox);
+  }, [checkedBox]);
 
   useEffect(() => {
     if (data && id) {
       updateData(id);
     }
   }, [data, id]);
+
   return (
     <Layout>
       <h1 className="pt-5 text-xl font-bold text-center">
-        Add Contact To Your List
+        {id ? "Edit" : "Add"} Contact {id ? "of" : "To"} Your List
       </h1>
-
+      {formData.isWhatsapp} {checkedBox}
       <form onSubmit={handleSubmit} className="flex flex-col">
         <input
           type="text"
@@ -121,7 +143,6 @@ function AddContact() {
           <option value="personal">Personal</option>
           <option value="office">Office</option>
         </select>
-
         <div className="flex">
           <input
             type="checkbox"
@@ -129,6 +150,7 @@ function AddContact() {
             onChange={handleChange}
             value={formData.isWhatsapp}
             className="p-5 m-4 ml-96 "
+            checked={formData.isWhatsapp}
           />
           <label className="pt-2 font-bold">Select your Whatsapp status</label>
         </div>
