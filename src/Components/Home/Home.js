@@ -78,7 +78,7 @@ function Home() {
 
                     <Link
                       className="border-2 border-black rounded-lg lg:p-3 lg:m-5 md:p-1 md:m-3"
-                      to={`/addContact/${i}`}
+                      to={`/editContat/${i}`}
                     >
                       Update
                     </Link>

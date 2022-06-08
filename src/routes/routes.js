@@ -9,7 +9,7 @@ function AppRoutes() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/addContact" element={<AddContact />} />
-        <Route path="/addContact/:id" element={<AddContact />} />
+        <Route path="/editContat/:id" element={<AddContact />} />
       </Routes>
     </BrowserRouter>
   );
