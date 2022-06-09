@@ -14,7 +14,7 @@ function AddContact() {
     phone: "",
     type: "",
     isWhatsapp: false,
-    profile: "",
+    profilePic: null,
   });
 
   const [data, setData] = useState();
@@ -40,6 +40,7 @@ function AddContact() {
         phone: "",
         type: "",
         isWhatsapp: false,
+        profilePic: "",
       });
       if (id) {
         navigate("/");
@@ -57,6 +58,10 @@ function AddContact() {
     if (event.target.type == "checkbox") {
       value = event.target.checked;
       console.log("hhhhhh", value);
+    } else if (event.target.type == "file") {
+      let imageValue = event.target.files[0].name;
+      value = imageValue;
+      console.log("name==>", name, value);
     } else {
       value = event.target.value;
     }
@@ -143,6 +148,13 @@ function AddContact() {
             Select your Whatsapp status
           </label>
         </div>
+
+        <input
+          type="file"
+          onChange={handleChange}
+          name="profilePic"
+          className="inputClass"
+        />
 
         <button
           className="w-32 m-auto border-2 border-black rounded-lg"
